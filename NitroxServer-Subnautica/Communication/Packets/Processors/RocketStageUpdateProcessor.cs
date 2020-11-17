@@ -33,7 +33,6 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);
-            Log.Debug($"Received packet: {packet}");
         }
     }
 }
