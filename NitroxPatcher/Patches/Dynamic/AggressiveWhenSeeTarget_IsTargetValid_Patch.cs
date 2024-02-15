@@ -1,4 +1,5 @@
 using System.Reflection;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -6,8 +7,7 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Allow creatures to chose remote players as targets only if they're not in creative mode.
-/// NB: This doesn't check for other player's use of 'invisible' command
+/// Allow creatures to chose remote players as targets only if they can be attacked (<see cref="RemotePlayer.CanBeAttacked"/>)
 /// </summary>
 public sealed partial class AggressiveWhenSeeTarget_IsTargetValid_Patch : NitroxPatch, IDynamicPatch
 {
@@ -19,9 +19,9 @@ public sealed partial class AggressiveWhenSeeTarget_IsTargetValid_Patch : Nitrox
         {
             return false;
         }
-        // We only want to cancel if the remote player is a target but 
+        // We only want to cancel if the target is a remote player which can't attacked
         if (target.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) &&
-            remotePlayerIdentifier.RemotePlayer.PlayerContext.GameMode == NitroxModel.Server.NitroxGameMode.CREATIVE)
+            !remotePlayerIdentifier.RemotePlayer.CanBeAttacked())
         {
             __result = false;
             return false;
